@@ -1,0 +1,112 @@
+[gd_scene load_steps=8 format=3 uid="uid://byki7be4c4wvl"]
+
+[ext_resource type="PackedScene" uid="uid://solfndu6bjd1" path="res://Player/Player.tscn" id="1_cweva"]
+[ext_resource type="Script" path="res://world.gd" id="1_hsil4"]
+[ext_resource type="PackedScene" uid="uid://wi34ei1acudn" path="res://Oponent/oponent.tscn" id="2_vtrga"]
+[ext_resource type="PackedScene" uid="uid://csxqqcahyx8w5" path="res://Ball/ball.tscn" id="3_2lbl2"]
+[ext_resource type="AudioStream" uid="uid://bdoubf2oyeei4" path="res://Assets/ping_pong_8bit_plop.ogg" id="5_yq1io"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i33rt"]
+size = Vector2(1279, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mt825"]
+size = Vector2(28.5, 856)
+
+[node name="World" type="Node"]
+script = ExtResource("1_hsil4")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0784314, 0.129412, 0.14902, 1)
+
+[node name="PlayerScore" type="Label" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_right = -200.0
+grow_horizontal = 2
+grow_vertical = 2
+localize_numeral_system = false
+theme_override_colors/font_color = Color(0.85098, 0.847059, 0.843137, 1)
+theme_override_font_sizes/font_size = 40
+text = "Text"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OpponentScore" type="Label" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 200.0
+offset_right = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+localize_numeral_system = false
+theme_override_colors/font_color = Color(0.85098, 0.847059, 0.843137, 1)
+theme_override_font_sizes/font_size = 40
+text = "Text"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CountdownLabel" type="Label" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -374.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.952941, 0.313726, 0.160784, 1)
+theme_override_font_sizes/font_size = 50
+text = "Countdown"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Player" parent="." instance=ExtResource("1_cweva")]
+position = Vector2(57, 297)
+
+[node name="Walls" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls"]
+position = Vector2(638.5, -10)
+shape = SubResource("RectangleShape2D_i33rt")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Walls"]
+position = Vector2(642, 730)
+shape = SubResource("RectangleShape2D_i33rt")
+
+[node name="Oponent" parent="." instance=ExtResource("2_vtrga")]
+position = Vector2(1230, 316)
+metadata/_edit_group_ = true
+
+[node name="Ball" parent="." instance=ExtResource("3_2lbl2")]
+position = Vector2(639, 397)
+
+[node name="Left" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Left"]
+position = Vector2(-52, 358)
+shape = SubResource("RectangleShape2D_mt825")
+
+[node name="Right" type="Area2D" parent="."]
+position = Vector2(1338, 363)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Right"]
+shape = SubResource("RectangleShape2D_mt825")
+
+[node name="CountdownTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="ScoreSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_yq1io")
+
+[connection signal="body_entered" from="Left" to="." method="_on_left_body_entered"]
+[connection signal="body_entered" from="Right" to="." method="_on_right_body_entered"]
+[connection signal="timeout" from="CountdownTimer" to="." method="_on_countdown_timer_timeout"]
